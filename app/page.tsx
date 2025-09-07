@@ -8,6 +8,10 @@ import { LegalContentCard } from '@/components/LegalContentCard';
 import { DocumentGenerator } from '@/components/DocumentGenerator';
 import { ActionLink } from '@/components/ActionLink';
 import { InfoCard } from '@/components/InfoCard';
+import { ToastContainer } from '@/components/Toast';
+import { LoadingSpinner, ContentSkeleton, CategorySkeleton } from '@/components/LoadingSpinner';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useToast } from '@/hooks/useToast';
 import { SAMPLE_LEGAL_CONTENT } from '@/lib/constants';
 import { CategoryType, LegalContent } from '@/lib/types';
 import { FileText, Scale, Users } from 'lucide-react';
@@ -16,29 +20,63 @@ type ViewState = 'home' | 'category' | 'content' | 'generator';
 
 export default function HomePage() {
   const { setFrameReady } = useMiniKit();
+  const toast = useToast();
   const [currentView, setCurrentView] = useState<ViewState>('home');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedContent, setSelectedContent] = useState<LegalContent | null>(null);
   const [purchasedContent, setPurchasedContent] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
     setFrameReady();
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, [setFrameReady]);
 
-  const handleCategorySelect = (category: CategoryType) => {
-    setSelectedCategory(category);
-    setCurrentView('category');
+  const handleCategorySelect = async (category: CategoryType) => {
+    setIsLoading(true);
+    try {
+      // Simulate loading delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setSelectedCategory(category);
+      setCurrentView('category');
+    } catch (error) {
+      toast.error('Failed to load category', 'Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleContentSelect = (content: LegalContent) => {
-    setSelectedContent(content);
-    setCurrentView('content');
+  const handleContentSelect = async (content: LegalContent) => {
+    setIsLoading(true);
+    try {
+      // Simulate loading delay
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setSelectedContent(content);
+      setCurrentView('content');
+    } catch (error) {
+      toast.error('Failed to load content', 'Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePurchase = (contentId: string) => {
-    // Simulate purchase process
-    setPurchasedContent(prev => new Set([...prev, contentId]));
-    alert('Content purchased successfully!');
+  const handlePurchase = async (contentId: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate purchase process
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setPurchasedContent(prev => new Set([...prev, contentId]));
+      toast.success('Purchase successful!', 'You now have access to this content.');
+    } catch (error) {
+      toast.error('Purchase failed', 'Please try again or contact support.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDocumentGenerate = (templateId: string, inputs: Record<string, string>) => {
@@ -236,13 +274,28 @@ export default function HomePage() {
     }
   };
 
+  if (isInitialLoading) {
+    return (
+      <AppShell title="PocketLegal">
+        <LoadingSpinner message="Loading your legal rights..." />
+      </AppShell>
+    );
+  }
+
   return (
-    <AppShell
-      title={getTitle()}
-      showBack={currentView !== 'home'}
-      onBack={handleBack}
-    >
-      {renderContent()}
-    </AppShell>
+    <ErrorBoundary onError={(error, errorInfo) => {
+      console.error('App error:', error, errorInfo);
+      toast.error('Application Error', 'Something went wrong. Please refresh the page.');
+    }}>
+      <AppShell
+        title={getTitle()}
+        showBack={currentView !== 'home'}
+        onBack={handleBack}
+      >
+        {isLoading && <LoadingSpinner variant="overlay" message="Loading..." />}
+        {renderContent()}
+        <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
+      </AppShell>
+    </ErrorBoundary>
   );
 }

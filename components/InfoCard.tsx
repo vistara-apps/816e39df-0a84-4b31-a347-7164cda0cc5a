@@ -24,15 +24,30 @@ export function InfoCard({
     summary: "p-4"
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (onClick && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      onClick();
+    }
+  };
+
+  const cardProps = onClick ? {
+    role: 'button',
+    tabIndex: 0,
+    onKeyDown: handleKeyDown,
+    'aria-label': 'Click to view details'
+  } : {};
+
   return (
     <div 
       className={cn(
         baseClasses,
         variantClasses[variant],
-        onClick && "cursor-pointer hover:scale-105 transform transition-transform duration-200",
+        onClick && "cursor-pointer hover:scale-105 focus:scale-105 transform transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50",
         className
       )}
       onClick={onClick}
+      {...cardProps}
     >
       {price && (
         <div className="flex justify-between items-start mb-4">
