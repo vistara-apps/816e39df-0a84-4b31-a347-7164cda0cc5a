@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "PocketLegal",
+    "subtitle": "Built with Zara",
+    "description": "PocketLegal is a Base Mini App built with Zara.",
+    "iconUrl": "https://0co.to/images/zara-2.png",
+    "homeUrl": "https://816e39df0a844b31a3477164cda0cc5a-k1xf.vercel.app",
+    "splashImageUrl": "https://816e39df0a844b31a3477164cda0cc5a-k1xf.vercel.app/splash.png",
+    "splashBackgroundColor": "#000000",
+    "heroImageUrl": "https://816e39df0a844b31a3477164cda0cc5a-k1xf.vercel.app/image.png",
+    "tagline": "PocketLegal",
+    "screenshotUrls": [
+      "https://816e39df0a844b31a3477164cda0cc5a-k1xf.vercel.app/screenshot.png",
+      "https://816e39df0a844b31a3477164cda0cc5a-k1xf.vercel.app/screenshot.png"
+    ],
+    "primaryCategory": "social",
+    "tags": [
+      "base",
+      "miniapp",
+      "onchainkit"
+    ],
+    "webhookUrl": "https://816e39df0a844b31a3477164cda0cc5a-k1xf.vercel.app/api/webhook"
+  }
+}
