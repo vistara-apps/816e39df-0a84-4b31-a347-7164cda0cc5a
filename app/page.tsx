@@ -6,13 +6,14 @@ import { AppShell } from '@/components/AppShell';
 import { CategoryGrid } from '@/components/CategoryGrid';
 import { LegalContentCard } from '@/components/LegalContentCard';
 import { DocumentGenerator } from '@/components/DocumentGenerator';
+import { PaymentTest } from '@/components/PaymentTest';
 import { ActionLink } from '@/components/ActionLink';
 import { InfoCard } from '@/components/InfoCard';
 import { SAMPLE_LEGAL_CONTENT } from '@/lib/constants';
 import { CategoryType, LegalContent } from '@/lib/types';
-import { FileText, Scale, Users } from 'lucide-react';
+import { FileText, Scale, Users, TestTube } from 'lucide-react';
 
-type ViewState = 'home' | 'category' | 'content' | 'generator';
+type ViewState = 'home' | 'category' | 'content' | 'generator' | 'test';
 
 export default function HomePage() {
   const { setFrameReady } = useMiniKit();
@@ -20,6 +21,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedContent, setSelectedContent] = useState<LegalContent | null>(null);
   const [purchasedContent, setPurchasedContent] = useState<Set<string>>(new Set());
+  const [transactions, setTransactions] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
     setFrameReady();
@@ -35,10 +37,17 @@ export default function HomePage() {
     setCurrentView('content');
   };
 
-  const handlePurchase = (contentId: string) => {
-    // Simulate purchase process
+  const handlePurchase = (contentId: string, transactionHash?: string) => {
+    // Handle successful x402 payment
     setPurchasedContent(prev => new Set([...prev, contentId]));
-    alert('Content purchased successfully!');
+    
+    if (transactionHash) {
+      setTransactions(prev => new Map([...prev, [contentId, transactionHash]]));
+      console.log('Payment successful:', { contentId, transactionHash });
+    }
+    
+    // Show success message
+    alert(`Content purchased successfully! ${transactionHash ? `Transaction: ${transactionHash.slice(0, 10)}...` : ''}`);
   };
 
   const handleDocumentGenerate = (templateId: string, inputs: Record<string, string>) => {
@@ -58,6 +67,9 @@ export default function HomePage() {
       case 'generator':
         setCurrentView('home');
         break;
+      case 'test':
+        setCurrentView('home');
+        break;
       default:
         setCurrentView('home');
     }
@@ -71,6 +83,8 @@ export default function HomePage() {
         return selectedContent?.title || 'Legal Content';
       case 'generator':
         return 'Document Generator';
+      case 'test':
+        return 'Payment Test';
       default:
         return 'PocketLegal';
     }
@@ -107,13 +121,13 @@ export default function HomePage() {
                 </div>
               </InfoCard>
 
-              <InfoCard>
+              <InfoCard onClick={() => setCurrentView('test')}>
                 <div className="flex items-center space-x-4">
-                  <Users className="w-8 h-8 text-accent" />
+                  <TestTube className="w-8 h-8 text-accent" />
                   <div>
-                    <h3 className="text-heading">Legal Support</h3>
+                    <h3 className="text-heading">Payment Test</h3>
                     <p className="text-sm text-white text-opacity-80">
-                      Connect with legal professionals
+                      Test x402 payment integration
                     </p>
                   </div>
                 </div>
@@ -229,6 +243,11 @@ export default function HomePage() {
       case 'generator':
         return (
           <DocumentGenerator onGenerate={handleDocumentGenerate} />
+        );
+
+      case 'test':
+        return (
+          <PaymentTest />
         );
 
       default:

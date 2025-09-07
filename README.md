@@ -16,6 +16,8 @@ PocketLegal is a Base Mini App that provides easily understandable and actionabl
 
 - **Framework**: Next.js 15 with App Router
 - **Blockchain**: Base (via OnchainKit)
+- **Payments**: x402 Protocol with USDC on Base
+- **Wallet Integration**: Wagmi + MiniKit
 - **Styling**: Tailwind CSS
 - **AI**: OpenAI API for content generation
 - **TypeScript**: Full type safety
@@ -41,6 +43,7 @@ PocketLegal is a Base Mini App that provides easily understandable and actionabl
    Fill in your API keys:
    - `NEXT_PUBLIC_ONCHAINKIT_API_KEY`: Your OnchainKit API key
    - `OPENAI_API_KEY`: Your OpenAI API key
+   - `NEXT_PUBLIC_PAYMENT_RECIPIENT_ADDRESS`: Address to receive payments
 
 4. **Run the development server**
    ```bash
@@ -68,6 +71,9 @@ PocketLegal is a Base Mini App that provides easily understandable and actionabl
 │   ├── types.ts           # TypeScript type definitions
 │   ├── constants.ts       # App constants and sample data
 │   ├── utils.ts           # Utility functions
+│   ├── payment.ts         # x402 payment integration
+│   ├── hooks/
+│   │   └── usePayment.ts  # Payment hook with wagmi
 │   └── openai.ts          # OpenAI integration
 └── public/                # Static assets
 ```
@@ -86,6 +92,12 @@ Shows individual legal rights information with purchase options.
 ### DocumentGenerator
 Generates legal documents based on user input and templates.
 
+### PaymentButton
+Handles x402 payments with USDC on Base, including wallet connection and transaction processing.
+
+### PaymentTest
+Test component for verifying x402 payment integration and USDC transactions.
+
 ## Business Model
 
 - **Micro-transactions**: Pay-per-access for specific guides ($0.50) or template generation ($1.00)
@@ -103,8 +115,36 @@ Generates legal documents based on user input and templates.
 ## API Integration
 
 - **OnchainKit**: Base blockchain integration
+- **x402-axios**: Payment protocol for USDC transactions
+- **Wagmi**: Ethereum wallet integration
 - **OpenAI**: Content generation and document creation
 - **MiniKit**: Farcaster frame interactions
+
+## x402 Payment Integration
+
+This app implements the x402 payment protocol for seamless USDC transactions on Base:
+
+### Features
+- **USDC Payments**: All transactions use USDC on Base network
+- **Wallet Integration**: Seamless connection via Wagmi and MiniKit
+- **Transaction Verification**: Automatic verification of payment confirmations
+- **Error Handling**: Comprehensive error handling for failed transactions
+- **Balance Checking**: Real-time USDC balance display and validation
+
+### Payment Flow
+1. User connects wallet via MiniKit/Wagmi
+2. App checks USDC balance on Base
+3. User initiates payment for content access
+4. x402 client processes USDC transaction
+5. Transaction is verified on Base network
+6. Content is unlocked upon successful payment
+
+### Testing
+Use the "Payment Test" section in the app to:
+- Test wallet connection
+- Verify USDC balance fetching
+- Test different payment amounts ($0.50, $1.00, $5.00)
+- Verify transaction processing and confirmation
 
 ## Development
 
