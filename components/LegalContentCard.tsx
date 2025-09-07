@@ -1,13 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { LegalContent } from '@/lib/types';
 import { InfoCard } from './InfoCard';
-import { ActionLink } from './ActionLink';
+import { PaymentButton } from './PaymentButton';
 import { formatPrice } from '@/lib/utils';
 
 interface LegalContentCardProps {
   content: LegalContent;
-  onPurchase: (contentId: string) => void;
+  onPurchase: (contentId: string, transactionHash?: string) => void;
   isPurchased?: boolean;
 }
 
@@ -16,8 +17,15 @@ export function LegalContentCard({
   onPurchase, 
   isPurchased = false 
 }: LegalContentCardProps) {
-  const handlePurchase = () => {
-    onPurchase(content.id);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+
+  const handlePaymentSuccess = (transactionHash: string) => {
+    setPaymentError(null);
+    onPurchase(content.id, transactionHash);
+  };
+
+  const handlePaymentError = (error: string) => {
+    setPaymentError(error);
   };
 
   return (
@@ -62,9 +70,20 @@ export function LegalContentCard({
         </div>
 
         {!isPurchased && (
-          <ActionLink variant="primary" onClick={handlePurchase}>
-            Access for {formatPrice(content.price)}
-          </ActionLink>
+          <PaymentButton
+            contentId={content.id}
+            amount={content.price}
+            description={`Access to ${content.title}`}
+            onPaymentSuccess={handlePaymentSuccess}
+            onPaymentError={handlePaymentError}
+          />
+        )}
+
+        {/* Display payment error if any */}
+        {paymentError && (
+          <div className="bg-red-500 bg-opacity-20 border border-red-500 border-opacity-30 rounded-lg p-3 mt-4">
+            <p className="text-red-200 text-sm">{paymentError}</p>
+          </div>
         )}
       </div>
     </InfoCard>
