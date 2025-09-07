@@ -2,23 +2,30 @@
 
 Your rights, simplified and actionable, right in your pocket.
 
-## Overview
+## 🚀 Overview
 
-PocketLegal is a Base Mini App that provides easily understandable and actionable legal rights information and tools for everyday situations, accessible via Farcaster frames.
+PocketLegal is a Base Mini App that provides easily understandable and actionable legal rights information and tools for everyday situations, accessible via Farcaster frames. Built with micro-transactions for pay-per-access content.
 
-## Features
+## ✨ Features
 
 - **On-Demand Rights Reference**: Bite-sized, easily digestible explanations of common legal rights
 - **Situation-Specific Quick Guides**: Curated content and step-by-step guides for specific scenarios
 - **Basic Document Generator**: Generate basic legal letters or notices based on user input
+- **Micro-Transaction Payments**: Pay-per-access model for legal content and document templates
+- **Wallet Integration**: Connect with crypto wallets for seamless payments
+- **User Dashboard**: Track purchases, access history, and generated documents
 
-## Tech Stack
+## 🛠 Tech Stack
 
 - **Framework**: Next.js 15 with App Router
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Wallet-based authentication
+- **Payments**: Crypto payments via OnchainKit
 - **Blockchain**: Base (via OnchainKit)
 - **Styling**: Tailwind CSS
 - **AI**: OpenAI API for content generation
 - **TypeScript**: Full type safety
+- **Wallet Connection**: RainbowKit + Wagmi
 
 ## Getting Started
 
